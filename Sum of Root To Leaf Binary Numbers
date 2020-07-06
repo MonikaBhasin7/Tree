@@ -1,0 +1,65 @@
+/* https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/
+Given a binary tree, each node has value 0 or 1.  Each root-to-leaf path represents a binary number starting with the most significant bit.  For example, if the path is 0 -> 1 -> 1 -> 0 -> 1, then this could represent 01101 in binary, which is 13.
+
+For all leaves in the tree, consider the numbers represented by the path from the root to that leaf.
+
+Return the sum of these numbers.
+
+ 
+
+Example 1:
+
+
+
+Input: [1,0,1,0,1,0,1]
+Output: 22
+Explanation: (100) + (101) + (110) + (111) = 4 + 5 + 6 + 7 = 22
+ 
+
+Note:
+
+The number of nodes in the tree is between 1 and 1000.
+node.val is 0 or 1.
+The answer will not exceed 2^31 - 1.
+*/
+class Solution {
+    int convertBin(string binary)
+    {
+	//1101-> 1*2^3 + 1*2^2 + 0*2^1 +1*2^0
+	//8 + 4 + 0 + 1 = 13
+       int num =0;
+       for(int i=0; i<binary.size(); i++)
+       {
+         num = num * 2 + (binary[i]-'0');   //same as converting string to bin num
+       }
+        return num;
+    }
+    
+    void sumRootToLeaf(TreeNode* root,int &sum, string  binary)
+    {
+        if(root == NULL)
+            return;
+        if(root->left == NULL && root->right==NULL)//if reached to leaf node
+        {
+            binary += to_string(root->val);//add final leaf node in string
+            
+            int bin = convertBin(binary);//covert it to number
+            sum += bin;//add in final sum
+            return;
+        }
+        binary += to_string(root->val);//append the root->val node to binary
+        
+        sumRootToLeaf(root->left, sum, binary);
+        sumRootToLeaf(root->right, sum, binary);
+    }
+    
+public:
+    int sumRootToLeaf(TreeNode* root) {
+        if(root == NULL)
+            return 0;
+        int sum = 0;
+        sumRootToLeaf(root,sum,"");
+        return sum;
+
+    }
+};
